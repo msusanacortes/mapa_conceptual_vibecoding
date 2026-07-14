@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Coding con Inteligencia Artificial - Mapa Conceptual Interactivo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            850: '#1e293b',
+                            950: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Desplazamientos suaves y personalización de barras de desplazamiento */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 flex flex-col min-h-screen font-sans selection:bg-violet-500 selection:text-white overflow-x-hidden">
+
+    <!-- Cabecera Principal -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-30 px-6 py-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="p-2.5 bg-violet-600/20 text-violet-400 rounded-xl border border-violet-500/30 shadow-lg shadow-violet-500/10">
+                <!-- Icono de red (Network) -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M12 8v8"/><path d="M12 16H5"/><path d="M12 16h7"/></svg>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-violet-400 via-indigo-200 to-cyan-400 bg-clip-text text-transparent">
+                    Vibe Coding con Inteligencia Artificial
+                </h1>
+                <p class="text-xs text-slate-400 mt-0.5 font-medium">
+                    Actividad Evaluativa e Interactiva con Integración de Modelos de Gemini API ✨
+                </p>
+            </div>
+        </div>
+
+        <!-- Buscador y Controles de Vista -->
+        <div class="flex flex-wrap items-center gap-3">
+            <div class="relative">
+                <!-- Icono de Búsqueda -->
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Buscar concepto..."
+                    class="pl-9 pr-4 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-all w-40 sm:w-48"
+                />
+            </div>
+
+            <div class="flex flex-wrap bg-slate-800 p-1 rounded-lg border border-slate-700 gap-1">
+                <button onclick="setViewMode('visual')" id="btn-view-visual" class="view-btn px-3 py-1 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 bg-violet-600 text-white shadow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M12 8v8"/><path d="M12 16H5"/><path d="M12 16h7"/></svg>
+                    Mapa Visual
+                </button>
+                <button onclick="setViewMode('text')" id="btn-view-text" class="view-btn px-3 py-1 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    Estructura
+                </button>
+                <button onclick="setViewMode('playground')" id="btn-view-playground" class="view-btn px-3 py-1 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-violet-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1 0-3.12 3 3 0 0 1 0-4.88 2.5 2.5 0 0 1 0-3.12A2.5 2.5 0 0 1 9.5 2z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 0-3.12 3 3 0 0 0 0-4.88 2.5 2.5 0 0 0 0-3.12A2.5 2.5 0 0 0 14.5 2z"></path></svg>
+                    Laboratorio IA ✨
+                </button>
+                <button onclick="setViewMode('mermaids')" id="btn-view-mermaids" class="view-btn px-3 py-1 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    Mermaid
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cuerpo Principal -->
+    <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        
+        <!-- PANEL IZQUIERDO: LIENZO PRINCIPAL -->
+        <section class="flex-1 relative bg-slate-950 p-4 sm:p-6 flex flex-col min-h-[550px] lg:min-h-0 overflow-hidden">
+            
+            <!-- Barra informativa superior -->
+            <div class="bg-slate-900 border border-slate-800/60 rounded-xl p-3 mb-4 flex items-start justify-between gap-3 shrink-0">
+                <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-violet-400 shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <div class="text-xs text-slate-300 leading-relaxed">
+                        <span class="font-semibold text-white">Práctica del Vibe Coding:</span> Haz clic en los nodos para desglosar sus definiciones en el panel derecho. Usa la pestaña <span class="text-violet-400 font-bold">Laboratorio IA ✨</span> para co-diseñar y depurar código real con Gemini.
+                    </div>
+                </div>
+                
+                <!-- Zoom (Solo visible en mapa visual) -->
+                <div id="zoom-controls" class="flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800 self-center shrink-0">
+                    <button onclick="adjustZoom(-0.1)" title="Alejar" class="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                    <span id="zoom-value" class="text-[10px] font-mono font-bold text-slate-300 w-10 text-center">100%</span>
+                    <button onclick="adjustZoom(0.1)" title="Acercar" class="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                    <button onclick="adjustZoom(0, true)" title="Restablecer" class="p-1 hover:bg-slate-800 rounded text-violet-400 hover:text-violet-300 transition-colors border-l border-slate-800 pl-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenedor de Errores de API -->
+            <div id="api-error-alert" class="hidden mb-4 p-3 bg-rose-500/15 border border-rose-500/30 rounded-xl flex items-center gap-2.5 text-xs text-rose-300 shrink-0">
+                <svg class="w-4 h-4 shrink-0 text-rose-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <span id="api-error-text"></span>
+            </div>
+
+            <!-- VISTA 1: MAPA CONCEPTUAL VISUAL -->
+            <div id="view-visual" class="view-content flex-1 bg-slate-900/40 border border-slate-800/80 rounded-2xl relative overflow-auto p-4 flex items-start justify-start shadow-inner">
+                <div id="canvas-wrapper" style="transform: scale(1); transform-origin: top left; width: 980px; height: 660px;" class="relative shrink-0 transition-transform duration-200 ease-out">
+                    
+                    <!-- SVG para las flechas y relaciones -->
+                    <svg id="connections-svg" class="absolute inset-0 w-full h-full pointer-events-none z-0">
+                        <defs>
+                            <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+                            </marker>
+                            <marker id="arrow-active" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#a78bfa" />
+                            </marker>
+                        </defs>
+                        <!-- Las líneas se inyectarán con JS -->
+                    </svg>
+
+                    <!-- Los Nodos se inyectarán con JS para permitir un renderizado interactivo sin colisiones -->
+                    <div id="nodes-container" class="absolute inset-0 z-10 pointer-events-none"></div>
+
+                </div>
+            </div>
+
+            <!-- VISTA 2: ESTRUCTURA DE TEXTO JERÁRQUICA -->
+            <div id="view-text" class="view-content hidden flex-1 bg-slate-900/40 border border-slate-800 rounded-2xl p-6 overflow-y-auto space-y-6">
+                <!-- Se poblará con JS -->
+            </div>
+
+            <!-- VISTA 3: LABORATORIO DE INTELIGENCIA ARTIFICIAL (CONECTADO A GEMINI) -->
+            <div id="view-playground" class="view-content hidden flex-1 bg-slate-900/40 border border-slate-800 rounded-2xl p-4 sm:p-6 overflow-y-auto space-y-8">
+                <!-- Panel 1: Diseñador / Optimizador de Prompts -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 shadow-lg space-y-4">
+                    <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800/80">
+                        <div class="p-1.5 bg-violet-600/20 text-violet-400 rounded-lg">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-white">Ingeniería de Prompts Inteligente ✨</h3>
+                            <p class="text-[10px] text-slate-400">Transforma ideas abstractas en especificaciones semánticas completas para Vibe Coding</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="text-xs font-semibold text-slate-300 block">Introduce la idea del software que deseas prototipar:</label>
+                        <div class="flex gap-2">
+                            <input
+                                type="text"
+                                id="prompt-idea-input"
+                                placeholder="Ej: un temporizador pomodoro interactivo que almacene tareas en localStorage"
+                                class="flex-1 px-3.5 py-2.5 bg-slate-900 border border-slate-800 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 rounded-xl text-xs placeholder-slate-500 transition-all outline-none"
+                            />
+                            <button
+                                onclick="optimizePrompt()"
+                                id="btn-optimize"
+                                class="px-4 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-2 shadow-md shadow-violet-500/10 shrink-0"
+                            >
+                                <span id="btn-optimize-text">Generar Prompt ✨</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="optimized-prompt-box" class="hidden mt-4 p-4 bg-slate-900 rounded-xl border border-slate-800 relative">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold text-violet-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                                PROMPT SISTÉMICO OPTIMIZADO
+                            </span>
+                            <button
+                                onclick="copyTextById('optimized-prompt-content')"
+                                class="text-[10px] bg-slate-950 hover:bg-slate-800 text-slate-300 px-2.5 py-1 rounded border border-slate-800 transition-all flex items-center gap-1"
+                            >
+                                Copiar Prompt
+                            </button>
+                        </div>
+                        <div id="optimized-prompt-content" class="text-xs text-slate-300 leading-relaxed max-h-[250px] overflow-y-auto font-sans whitespace-pre-wrap"></div>
+                    </div>
+                </div>
+
+                <!-- Panel 2: Desafío de Validación Humana -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 shadow-lg space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-2 border-b border-slate-800/80">
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-1.5 bg-indigo-600/20 text-indigo-400 rounded-lg">
+                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-white">Desafío de Depuración y Validación Humana ✨</h3>
+                                <p class="text-[10px] text-slate-400">Pon a prueba tu pensamiento crítico. Identifica y corrige fallas generadas por la IA</p>
+                            </div>
+                        </div>
+                        <button
+                          onclick="generateChallenge()"
+                          id="btn-challenge"
+                          class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold rounded-lg transition-all flex items-center gap-1.5 shadow"
+                        >
+                          Generar Desafío ✨
+                        </button>
+                    </div>
+
+                    <div id="challenge-box" class="hidden space-y-4">
+                        <div id="challenge-content" class="p-4 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-300 leading-relaxed font-sans max-h-[300px] overflow-y-auto whitespace-pre-wrap"></div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold text-slate-300 block">Escribe tu instrucción correctiva (Prompt) para solucionar el error:</label>
+                            <div class="flex gap-2">
+                                <textarea
+                                  id="correction-prompt-input"
+                                  rows="2"
+                                  placeholder="Ej: Modifica la función 'updateCart' para que sume correctamente el IVA al precio neto..."
+                                  class="flex-1 p-3 bg-slate-900 border border-slate-800 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 rounded-xl text-xs placeholder-slate-500 transition-all outline-none resize-none"
+                                ></textarea>
+                                <button
+                                  onclick="evaluatePrompt()"
+                                  id="btn-evaluate"
+                                  class="px-4 bg-violet-600 hover:bg-violet-700 text-white text-xs font-bold rounded-xl transition-all flex flex-col items-center justify-center gap-1.5 shrink-0"
+                                >
+                                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                  <span class="text-[10px]">Evaluar ✨</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="evaluation-box" class="hidden p-4 bg-slate-900/80 border border-violet-800/30 rounded-xl space-y-2">
+                            <span class="text-[10px] font-bold text-violet-400 uppercase tracking-wider flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                EVALUACIÓN DE RESPUESTA POR GEMINI
+                            </span>
+                            <div id="evaluation-content" class="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap font-sans"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA 4: MERMAID EXPORTER -->
+            <div id="view-mermaids" class="view-content hidden flex-1 bg-slate-900/40 border border-slate-800 rounded-2xl p-6 overflow-hidden flex flex-col">
+                <div class="flex justify-between items-center pb-4 border-b border-slate-800 shrink-0">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-violet-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Código Fuente para Mermaid.js
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1">Copia este código estructurado para cargarlo directamente en draw.io, GitHub o Notion</p>
+                    </div>
+                    <button
+                      onclick="copyTextById('mermaid-code-pre')"
+                      class="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-xs font-semibold rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2"
+                    >
+                      Copiar Código
+                    </button>
+                </div>
+                <div class="flex-1 mt-4 bg-slate-950 p-4 rounded-xl border border-slate-800 overflow-auto font-mono text-xs text-slate-300 leading-relaxed">
+                    <pre id="mermaid-code-pre"></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANEL DERECHO: DETALLES CONCEPTUALES EN TIEMPO REAL -->
+        <section class="w-full lg:w-[420px] shrink-0 border-t lg:border-t-0 lg:border-l border-slate-800 bg-slate-900 p-6 overflow-y-auto flex flex-col gap-6">
+            
+            <!-- Card del Concepto Activo -->
+            <div class="bg-slate-950 rounded-2xl border border-slate-800 p-5 shadow-xl relative overflow-hidden">
+                <div id="active-accent-bar" class="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-violet-500 to-indigo-600"></div>
+                
+                <div class="flex items-start justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div id="active-icon-wrapper" class="p-2 bg-slate-900 border border-violet-500/30 text-violet-400 rounded-xl">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                        <div>
+                          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Concepto Seleccionado</span>
+                          <h2 id="active-title" class="text-base font-extrabold text-white mt-0.5">Vibe Coding</h2>
+                        </div>
+                    </div>
+                    <span id="active-badge" class="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border capitalize bg-slate-900/60 border-violet-500/30 text-violet-300">
+                      Core
+                    </span>
+                </div>
+
+                <p id="active-desc" class="text-xs text-slate-300 mt-4 leading-relaxed font-medium">
+                    <!-- Inyectado dinámicamente -->
+                </p>
+
+                <div class="mt-5 p-4 bg-slate-900/60 border border-slate-800/80 rounded-xl">
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-violet-400 mb-2">
+                        <svg class="w-3.5 h-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                        Caso Práctico en Vibe Coding:
+                    </div>
+                    <p id="active-example" class="text-xs text-slate-300 italic leading-relaxed">
+                        <!-- Inyectado dinámicamente -->
+                    </p>
+                </div>
+            </div>
+
+            <!-- Vínculos / Relaciones del Concepto -->
+            <div class="bg-slate-950/40 rounded-xl border border-slate-800 p-4 flex flex-col gap-3">
+                <h3 class="text-xs font-bold text-slate-400 tracking-wider uppercase">Vínculos de este Concepto:</h3>
+                <div id="active-relations-container" class="space-y-2.5">
+                    <!-- Inyectado dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Comparativa de Paradigmas -->
+            <div class="bg-gradient-to-br from-indigo-950/30 to-violet-950/20 border border-violet-800/30 rounded-xl p-4">
+                <h3 class="text-xs font-extrabold text-indigo-300 tracking-wider uppercase mb-3 flex items-center gap-1.5">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    Paradigma: Vibe Coding vs Tradicional
+                </h3>
+                <div class="grid grid-cols-2 gap-3 text-[10px]">
+                    <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
+                        <span class="font-bold text-violet-400 block mb-1">Vibe Coding</span>
+                        <p class="text-slate-300 leading-snug">
+                            El desarrollador expresa intenciones abstractas, audita arquitecturas y realiza bucles interactivos, delegando la sintaxis manual a la IA generativa.
+                        </p>
+                    </div>
+                    <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
+                        <span class="font-bold text-slate-400 block mb-1">Tradicional</span>
+                        <p class="text-slate-300 leading-snug">
+                            El desarrollador escribe y depura manualmente la sintaxis de programación línea por línea, administrando dependencias y compilación de forma directa.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Pie de Página -->
+    <footer class="border-t border-slate-800 bg-slate-950 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-2 shrink-0">
+        <span class="text-[10px] text-slate-500 font-medium">
+            Diseñado para el Prototipado Rápido y Fundamentos de Inteligencia Artificial.
+        </span>
+        <span class="text-[10px] bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800 text-slate-400 font-semibold">
+            HTML5 Single-File Interactive Map
+        </span>
+    </footer>
+
+    <!-- LÓGICA DE APLICACIÓN EN JAVASCRIPT -->
+    <script>
+        // --- CONSTANTES DE DATOS ---
+        const CONCEPTS = {
+            vibe_coding: {
+                id: 'vibe_coding',
+                title: 'Vibe Coding',
+                category: 'core',
+                short: 'Prototipado rápido guiado por la intención humana y asistido por IA.',
+                desc: 'Es un paradigma de desarrollo donde el humano actúa como director creativo y validador, delegando la escritura directa del código a herramientas de IA generativa mediante instrucciones en lenguaje natural.',
+                example: 'Crear un juego completo en una tarde describiendo las mecánicas, probando los fallos y pidiéndole a la IA que los corrija de inmediato.',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`,
+                color: 'from-violet-500 to-indigo-600',
+                borderColor: 'border-violet-500',
+                textColor: 'text-violet-400'
+            },
+            inteligencia_artificial: {
+                id: 'inteligencia_artificial',
+                title: 'Inteligencia Artificial (IA)',
+                category: 'tech',
+                short: 'Sistemas informáticos que simulan procesos de inteligencia humana.',
+                desc: 'Campo de la ciencia de la computación dedicado a crear sistemas capaces de realizar tareas que típicamente requieren inteligencia humana, como el aprendizaje, el razonamiento y la resolución de problemas.',
+                example: 'Algoritmos de recomendación, visión por computadora y sistemas de procesamiento del lenguaje.',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M12 8v8"/><path d="M12 16H5"/><path d="M12 16h7"/></svg>`,
+                color: 'from-blue-500 to-cyan-600',
+                borderColor: 'border-blue-500',
+                textColor: 'text-blue-400'
+            },
+            ia_generativa: {
+                id: 'ia_generativa',
+                title: 'IA Generativa',
+                category: 'tech',
+                short: 'Rama de la IA enfocada en la creación de contenido nuevo.',
+                desc: 'Subcampo de la inteligencia artificial que utiliza modelos matemáticos complejos para generar contenido original (texto, código, imágenes, música) a partir de patrones aprendidos de datos existentes.',
+                example: 'Modelos que escriben código fuente ejecutable completo a partir de descripciones breves.',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`,
+                color: 'from-emerald-500 to-teal-600',
+                borderColor: 'border-emerald-500',
+                textColor: 'text-emerald-400'
+            },
+            modelos_lenguaje: {
+                id: 'modelos_lenguaje',
+                title: 'Modelos de Lenguaje (LLMs)',
+                category: 'tech',
+                short: 'Redes neuronales que procesan y generan lenguaje de forma probabilística.',
+                desc: 'Algoritmos entrenados con colosales volúmenes de texto para comprender el contexto gramatical, semántico y lógico de las palabras, permitiéndoles predecir y redactar código o texto coherente.',
+                example: 'Modelos como GPT-4, Gemini o Claude, capaces de interpretar instrucciones y generar scripts de programación.',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`,
+                color: 'from-sky-500 to-blue-600',
+                borderColor: 'border-sky-500',
+                textColor: 'text-sky-400'
+            },
+            prompt: {
+                id: 'prompt',
+                title: 'Prompt',
+                category: 'process',
+                short: 'Instrucción o estímulo de entrada en lenguaje natural para la IA.',
+                desc: 'La especificación detallada de la tarea que el programador le da a la IA. Un buen prompt describe el rol, el contexto, las restricciones, la entrada y el formato de salida deseado.',
+                example: '"Escribe una función de JavaScript que ordene este array de objetos por precio de forma descendente, manejando errores de campos nulos."',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>`,
+                color: 'from-amber-500 to-orange-600',
+                borderColor: 'border-amber-500',
+                textColor: 'text-amber-400'
+            },
+            prototipo_digital: {
+                id: 'prototipo_digital',
+                title: 'Prototipo Digital',
+                category: 'outcome',
+                short: 'Representación interactiva y funcional de una idea de software.',
+                desc: 'El resultado tangible del Vibe Coding. Un producto mínimo viable (MVP) o simulación interactiva que sirve para validar la viabilidad técnica, el diseño de la experiencia de usuario y la lógica de negocio antes del desarrollo formal.',
+                example: 'Una página web interactiva de comercio electrónico construida en menos de una hora para validar una idea de startup.',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`,
+                color: 'from-fuchsia-500 to-pink-600',
+                borderColor: 'border-fuchsia-500',
+                textColor: 'text-fuchsia-400'
+            },
+            validacion_humana: {
+                id: 'validacion_humana',
+                title: 'Validación Humana',
+                category: 'control',
+                short: 'Supervisión crítica, pruebas y depuración del resultado de la IA.',
+                desc: 'El rol indispensable del desarrollador en el Vibe Coding. Consiste en revisar el código generado, ejecutarlo, identificar fallas de lógica o seguridad, y verificar que cumpla realmente con la intención inicial.',
+                example: 'Probar un formulario generado por la IA para asegurar que las validaciones de correo electrónico funcionen correctamente con datos erróneos.',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
+                color: 'from-teal-500 to-emerald-600',
+                borderColor: 'border-teal-500',
+                textColor: 'text-teal-400'
+            },
+            iteracion: {
+                id: 'iteracion',
+                title: 'Iteración',
+                category: 'process',
+                short: 'Ciclo repetitivo de retroalimentación, ajuste y refinamiento continuo.',
+                desc: 'El proceso iterativo donde el humano evalúa el código de la IA, detecta errores o áreas de mejora, y vuelve a enviar prompts correctivos para pulir gradualmente el prototipo.',
+                example: 'Pedirle a la IA: "El botón de eliminar funciona, pero ahora agrégale una animación de desvanecimiento al elemento borrado y vuelve a generar el código."',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>`,
+                color: 'from-pink-500 to-rose-600',
+                borderColor: 'border-pink-500',
+                textColor: 'text-pink-400'
+            },
+            alcances_ia: {
+                id: 'alcances_ia',
+                title: 'Alcances de la IA',
+                category: 'analysis',
+                short: 'Capacidades y oportunidades de aceleración en el desarrollo.',
+                desc: 'Las fronteras actuales de la IA que potencian el Vibe Coding: traducción instantánea entre lenguajes de programación, sugerencias de algoritmos, automatización de código repetitivo (boilerplate) y democratización del desarrollo de software.',
+                example: 'Poder programar una aplicación móvil interactiva sin necesidad de dominar la sintaxis estricta de Kotlin o Swift.',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>`,
+                color: 'from-cyan-500 to-blue-600',
+                borderColor: 'border-cyan-500',
+                textColor: 'text-cyan-400'
+            },
+            limites_ia: {
+                id: 'limites_ia',
+                title: 'Límites o Riesgos de la IA',
+                category: 'analysis',
+                short: 'Restricciones, fallas éticas y técnicas de los modelos.',
+                desc: 'Riesgos críticos como las "alucinaciones" (generación de código inexistente o incorrecto), introducción de vulnerabilidades de seguridad ocultas, sesgos en el entrenamiento, desactualización de librerías y falta de comprensión de la arquitectura holística del sistema.',
+                example: 'La IA sugiere una librería descontinuada con fallos de seguridad graves para procesar pagos de usuarios.',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"></path></svg>`,
+                color: 'from-rose-500 to-red-600',
+                borderColor: 'border-rose-500',
+                textColor: 'text-rose-400'
+            }
+        };
+
+        const CONNECTIONS = [
+            { from: 'vibe_coding', to: 'inteligencia_artificial', text: 'se apoya en' },
+            { from: 'inteligencia_artificial', to: 'ia_generativa', text: 'engloba la' },
+            { from: 'ia_generativa', to: 'modelos_lenguaje', text: 'utiliza' },
+            { from: 'vibe_coding', to: 'prompt', text: 'utiliza como instrucción' },
+            { from: 'prompt', to: 'modelos_lenguaje', text: 'guía respuesta de' },
+            { from: 'modelos_lenguaje', to: 'vibe_coding', text: 'entrega código a' },
+            { from: 'vibe_coding', to: 'prototipo_digital', text: 'tiene como meta' },
+            { from: 'vibe_coding', to: 'validacion_humana', text: 'requiere siempre' },
+            { from: 'validacion_humana', to: 'iteracion', text: 'desencadena' },
+            { from: 'iteracion', to: 'prompt', text: 'refina mediante' },
+            { from: 'vibe_coding', to: 'alcances_ia', text: 'aprovecha los' },
+            { from: 'vibe_coding', to: 'limites_ia', text: 'debe mitigar los' }
+        ];
+
+        const NODE_POSITIONS = {
+            vibe_coding: { x: 480, y: 300 },
+            inteligencia_artificial: { x: 180, y: 80 },
+            ia_generativa: { x: 480, y: 80 },
+            modelos_lenguaje: { x: 780, y: 80 },
+            alcances_ia: { x: 160, y: 220 },
+            limites_ia: { x: 800, y: 220 },
+            validacion_humana: { x: 160, y: 440 },
+            iteracion: { x: 300, y: 560 },
+            prompt: { x: 440, y: 440 },
+            prototipo_digital: { x: 760, y: 440 }
+        };
+
+        // --- ESTADO GLOBAL DE LA APLICACIÓN ---
+        let selectedId = 'vibe_coding';
+        let viewMode = 'visual'; // 'visual' | 'text' | 'playground' | 'mermaids'
+        let searchTerm = '';
+        let zoomScale = 1.0;
+        let hoveredNode = null;
+        let challengeCode = "";
+
+        // --- INICIALIZADOR ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
+
+        function initApp() {
+            // Enlazar eventos de búsqueda
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                searchTerm = e.target.value;
+                renderMap();
+                renderTextStructure();
+            });
+
+            // Dibujar todo el contenido
+            renderMap();
+            renderDetails();
+            renderTextStructure();
+            renderMermaid();
+        }
+
+        // --- CAMBIAR MODO DE VISTA ---
+        function setViewMode(mode) {
+            viewMode = mode;
+            
+            // Actualizar botones de la cabecera
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('bg-violet-600', 'text-white', 'shadow', 'bg-gradient-to-r', 'from-violet-600', 'to-indigo-600', 'ring-1', 'ring-violet-400/30');
+                btn.classList.add('text-slate-400', 'hover:text-slate-200');
+            });
+
+            const activeBtn = document.getElementById(`btn-view-${mode}`);
+            activeBtn.classList.remove('text-slate-400', 'hover:text-slate-200');
+            if (mode === 'playground') {
+                activeBtn.classList.add('bg-gradient-to-r', 'from-violet-600', 'to-indigo-600', 'text-white', 'shadow', 'ring-1', 'ring-violet-400/30');
+            } else {
+                activeBtn.classList.add('bg-violet-600', 'text-white', 'shadow');
+            }
+
+            // Ocultar/Mostrar contenedores de contenido
+            document.querySelectorAll('.view-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${mode}`).classList.remove('hidden');
+
+            // Mostrar/Ocultar controles de Zoom
+            const zoomCtrl = document.getElementById('zoom-controls');
+            if (mode === 'visual') {
+                zoomCtrl.classList.remove('hidden');
+                renderMap();
+            } else {
+                zoomCtrl.classList.add('hidden');
+            }
+        }
+
+        // --- CONTROL DE ZOOM ---
+        function adjustZoom(delta, reset = false) {
+            if (reset) {
+                zoomScale = 1.0;
+            } else {
+                zoomScale = Math.min(1.4, Math.max(0.6, zoomScale + delta));
+            }
+            document.getElementById('zoom-value').innerText = `${Math.round(zoomScale * 100)}%`;
+            document.getElementById('canvas-wrapper').style.transform = `scale(${zoomScale})`;
+        }
+
+        // --- RENDERIZADOR DEL MAPA VISUAL (SVG + HTML) ---
+        function renderMap() {
+            const svgContainer = document.getElementById('connections-svg');
+            const nodesContainer = document.getElementById('nodes-container');
+            
+            // Limpiar contenedores
+            svgContainer.innerHTML = svgContainer.querySelector('defs').outerHTML;
+            nodesContainer.innerHTML = '';
+
+            const lowerSearch = searchTerm.toLowerCase().trim();
+
+            // 1. Dibujar Conexiones/Relaciones Semánticas
+            CONNECTIONS.forEach(conn => {
+                const fromPos = NODE_POSITIONS[conn.from];
+                const toPos = NODE_POSITIONS[conn.to];
+                if (!fromPos || !toPos) return;
+
+                const isSelectedPath = selectedId === conn.from || selectedId === conn.to;
+                const isHoveredPath = hoveredNode === conn.from || hoveredNode === conn.to;
+                const isActive = isSelectedPath || isHoveredPath;
+
+                const midX = (fromPos.x + toPos.x) / 2;
+                const midY = (fromPos.y + toPos.y) / 2;
+
+                // Crear elemento G
+                const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                group.setAttribute('class', 'transition-all duration-300');
+
+                // Línea de Conector
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', fromPos.x);
+                line.setAttribute('y1', fromPos.y);
+                line.setAttribute('x2', toPos.x);
+                line.setAttribute('y2', toPos.y);
+                line.setAttribute('stroke', isActive ? '#a78bfa' : '#334155');
+                line.setAttribute('stroke-width', isActive ? '2.5' : '1.5');
+                if (conn.from === 'iteracion') {
+                    line.setAttribute('stroke-dasharray', '4,4');
+                }
+                line.setAttribute('marker-end', `url(#${isActive ? 'arrow-active' : 'arrow'})`);
+                group.appendChild(line);
+
+                // Cuadro de texto de la relación semántica
+                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rect.setAttribute('x', midX - 52);
+                rect.setAttribute('y', midY - 9);
+                rect.setAttribute('width', 104);
+                rect.setAttribute('height', 18);
+                rect.setAttribute('rx', 4);
+                rect.setAttribute('fill', '#0f172a');
+                rect.setAttribute('stroke', isActive ? '#8b5cf6' : '#1e293b');
+                rect.setAttribute('stroke-width', '1');
+                group.appendChild(rect);
+
+                // Texto descriptivo del conector
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', midX);
+                text.setAttribute('y', midY + 4);
+                text.setAttribute('fill', isActive ? '#c084fc' : '#94a3b8');
+                text.setAttribute('font-size', '9');
+                text.setAttribute('font-weight', 'bold');
+                text.setAttribute('text-anchor', 'middle');
+                text.textContent = conn.text;
+                group.appendChild(text);
+
+                svgContainer.appendChild(group);
+            });
+
+            // 2. Dibujar Nodos Absolutos
+            Object.keys(CONCEPTS).forEach(id => {
+                const concept = CONCEPTS[id];
+                const pos = NODE_POSITIONS[id];
+                const isSelected = selectedId === id;
+                
+                // Determinar si coincide con el buscador
+                let isFiltered = true;
+                if (lowerSearch) {
+                    isFiltered = concept.title.toLowerCase().includes(lowerSearch) || 
+                                 concept.short.toLowerCase().includes(lowerSearch) || 
+                                 concept.desc.toLowerCase().includes(lowerSearch);
+                }
+
+                // Generar elemento de botón dinámico
+                const nodeBtn = document.createElement('button');
+                nodeBtn.style.left = `${pos.x}px`;
+                nodeBtn.style.top = `${pos.y}px`;
+                nodeBtn.style.transform = 'translate(-50%, -50%)';
+                nodeBtn.style.pointerEvents = 'auto'; // Permitir clics de interacción
+
+                // Clases de estilo dinámicas de Tailwind
+                let cardClasses = `absolute z-10 px-4 py-2.5 rounded-xl border text-center transition-all duration-300 flex flex-col items-center justify-center w-[170px] shadow-lg group `;
+                
+                if (isFiltered) {
+                    cardClasses += 'opacity-100 scale-100 ';
+                } else {
+                    cardClasses += 'opacity-25 scale-90 ';
+                }
+
+                if (isSelected) {
+                    cardClasses += `bg-slate-900 border-2 ${concept.borderColor} shadow-violet-500/10 ring-2 ring-violet-500/10`;
+                } else {
+                    cardClasses += `bg-slate-950/90 border-slate-800 hover:border-slate-700 hover:bg-slate-900/80`;
+                }
+
+                nodeBtn.className = cardClasses;
+
+                // Eventos de ratón
+                nodeBtn.addEventListener('click', () => {
+                    selectConcept(id);
+                });
+                nodeBtn.addEventListener('mouseenter', () => {
+                    hoveredNode = id;
+                    renderMap();
+                });
+                nodeBtn.addEventListener('mouseleave', () => {
+                    hoveredNode = null;
+                    renderMap();
+                });
+
+                // HTML interno del nodo
+                nodeBtn.innerHTML = `
+                    <div class="p-1.5 rounded-lg mb-1.5 bg-slate-900 border ${isSelected ? concept.borderColor : 'border-slate-800'} text-slate-300 group-hover:text-white transition-all">
+                        ${concept.icon}
+                    </div>
+                    <span class="text-[11px] font-bold tracking-tight block leading-tight ${isSelected ? 'text-white' : 'text-slate-300 group-hover:text-slate-100'}">
+                        ${concept.title}
+                    </span>
+                    <span class="text-[9px] text-slate-400 mt-1 leading-snug line-clamp-2 block px-0.5">
+                        ${concept.short}
+                    </span>
+                `;
+
+                nodesContainer.appendChild(nodeBtn);
+            });
+        }
+
+        // --- SELECCIONAR CONCEPTO ---
+        function selectConcept(id) {
+            selectedId = id;
+            renderMap();
+            renderDetails();
+            renderTextStructure();
+        }
+
+        // --- RENDERIZADOR DE DETALLES (PANEL DERECHO) ---
+        function renderDetails() {
+            const concept = CONCEPTS[selectedId];
+            if (!concept) return;
+
+            // Actualizar la barra lateral
+            document.getElementById('active-accent-bar').className = `absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b ${concept.color}`;
+            document.getElementById('active-icon-wrapper').innerHTML = concept.icon;
+            document.getElementById('active-icon-wrapper').className = `p-2 bg-slate-900 border ${concept.borderColor} ${concept.textColor} rounded-xl`;
+            document.getElementById('active-title').innerText = concept.title;
+            document.getElementById('active-badge').innerText = concept.category;
+            
+            // Estilo del badge según categoría
+            let badgeClass = `px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide border capitalize bg-slate-900/60 `;
+            if (concept.category === 'core') badgeClass += 'border-violet-500/30 text-violet-300';
+            else if (concept.category === 'tech') badgeClass += 'border-blue-500/30 text-blue-300';
+            else if (concept.category === 'process') badgeClass += 'border-amber-500/30 text-amber-300';
+            else if (concept.category === 'outcome') badgeClass += 'border-fuchsia-500/30 text-fuchsia-300';
+            else if (concept.category === 'control') badgeClass += 'border-teal-500/30 text-teal-300';
+            else badgeClass += 'border-rose-500/30 text-rose-300';
+            
+            document.getElementById('active-badge').className = badgeClass;
+            document.getElementById('active-desc').innerText = concept.desc;
+            document.getElementById('active-example').innerText = `"${concept.example}"`;
+
+            // Construir relaciones directas
+            const relationsContainer = document.getElementById('active-relations-container');
+            relationsContainer.innerHTML = '';
+
+            const relatedConnections = CONNECTIONS.filter(c => c.from === selectedId || c.to === selectedId);
+            
+            relatedConnections.forEach(conn => {
+                const isFrom = conn.from === selectedId;
+                const relatedNode = CONCEPTS[isFrom ? conn.to : conn.from];
+
+                const relationEl = document.createElement('div');
+                relationEl.className = "p-2.5 bg-slate-900/80 border border-slate-800/80 hover:border-slate-700/60 rounded-xl flex items-center justify-between gap-3 cursor-pointer transition-all group";
+                
+                relationEl.innerHTML = `
+                    <div class="flex items-center gap-2">
+                      <div class="w-1.5 h-1.5 rounded-full bg-violet-500 group-hover:scale-125 transition-transform"></div>
+                      <div class="text-xs">
+                        ${isFrom ? `
+                          <div class="text-slate-300 font-medium">
+                            <span class="text-slate-400 font-normal">Establece </span> 
+                            <span class="font-bold text-violet-400">"${conn.text}"</span>
+                            <span class="text-slate-400 font-normal"> con: </span>
+                            <span class="text-white font-bold block mt-0.5">${relatedNode.title}</span>
+                          </div>
+                        ` : `
+                          <div class="text-slate-300 font-medium">
+                            <span class="text-white font-bold block mb-0.5">${relatedNode.title}</span>
+                            <span class="text-slate-400 font-normal">sirve para </span>
+                            <span class="font-bold text-violet-400">"${conn.text}"</span>
+                            <span class="text-slate-400 font-normal"> el concepto actual</span>
+                          </div>
+                        `}
+                      </div>
+                    </div>
+                    <svg class="w-4 h-4 text-slate-500 group-hover:text-violet-400 transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                `;
+
+                relationEl.addEventListener('click', () => {
+                    selectConcept(relatedNode.id);
+                });
+
+                relationsContainer.appendChild(relationEl);
+            });
+        }
+
+        // --- RENDERIZADOR DE ESTRUCTURA JERÁRQUICA (TEXTO) ---
+        function renderTextStructure() {
+            const textContainer = document.getElementById('view-text');
+            textContainer.innerHTML = `
+                <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                    <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-violet-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Estructura Jerárquica del Mapa Conceptual
+                    </h3>
+                    <span class="text-xs text-slate-400">Ideal para estudiar e integrar en tus entregas</span>
+                </div>
+
+                <div class="pl-0">
+                    <div onclick="selectConcept('vibe_coding')" class="bg-slate-900 border-2 ${selectedId === 'vibe_coding' ? 'border-violet-500' : 'border-violet-500/40'} p-4 rounded-xl max-w-2xl shadow-md cursor-pointer transition-all">
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-1.5 bg-violet-500/20 text-violet-400 rounded-lg">
+                                ${CONCEPTS.vibe_coding.icon}
+                            </div>
+                            <span class="text-sm font-bold text-white">Nivel Primario: Vibe Coding con Inteligencia Artificial (Tema Central)</span>
+                        </div>
+                        <p class="text-xs text-slate-300 mt-2">${CONCEPTS.vibe_coding.desc}</p>
+                    </div>
+
+                    <div class="mt-6 ml-6 border-l-2 border-slate-800 pl-6 space-y-6">
+                        
+                        <!-- Rama 1: Soporte de IA -->
+                        <div>
+                            <h4 class="text-xs font-bold text-violet-400 uppercase tracking-wider mb-3">1. Soporte e Infraestructura de Inteligencia Artificial</h4>
+                            <div class="space-y-3" id="tree-branch-1"></div>
+                        </div>
+
+                        <!-- Rama 2: El ciclo del Vibe Coding -->
+                        <div>
+                            <h4 class="text-xs font-bold text-violet-400 uppercase tracking-wider mb-3">2. Flujo de Trabajo, Prototipado e Interacción</h4>
+                            <div class="space-y-3" id="tree-branch-2"></div>
+                        </div>
+
+                        <!-- Rama 3: Oportunidades y Riesgos -->
+                        <div>
+                            <h4 class="text-xs font-bold text-violet-400 uppercase tracking-wider mb-3">3. Evaluación de Entorno (Oportunidades y Riesgos)</h4>
+                            <div class="space-y-3" id="tree-branch-3"></div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+
+            // Rellenar las ramas jerárquicas
+            const branch1 = ['inteligencia_artificial', 'ia_generativa', 'modelos_lenguaje'];
+            const branch2 = ['prompt', 'prototipo_digital', 'validacion_humana', 'iteracion'];
+            const branch3 = ['alcances_ia', 'limites_ia'];
+
+            const populateBranch = (list, elementId) => {
+                const element = document.getElementById(elementId);
+                list.forEach(nodeId => {
+                    const node = CONCEPTS[nodeId];
+                    const nodeDiv = document.createElement('div');
+                    nodeDiv.className = `p-3 rounded-xl border transition-all cursor-pointer ${selectedId === nodeId ? 'bg-slate-800/80 border-violet-500/50 ring-1 ring-violet-500/20' : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'}`;
+                    
+                    nodeDiv.innerHTML = `
+                        <span class="text-xs font-bold text-white block">${node.title}</span>
+                        <span class="text-xs text-slate-400 mt-1 block">${node.desc}</span>
+                    `;
+
+                    nodeDiv.addEventListener('click', () => {
+                        selectConcept(nodeId);
+                    });
+
+                    element.appendChild(nodeDiv);
+                });
+            };
+
+            populateBranch(branch1, 'tree-branch-1');
+            populateBranch(branch2, 'tree-branch-2');
+            populateBranch(branch3, 'tree-branch-3');
+        }
+
+        // --- RENDERIZAR CÓDIGO MERMAID ---
+        function renderMermaid() {
+            const pre = document.getElementById('mermaid-code-pre');
+            pre.innerText = `graph TD
+  VC[Vibe Coding con IA] -->|se apoya en| IA[Inteligencia Artificial]
+  IA -->|engloba la| IAG[IA Generativa]
+  IAG -->|utiliza| LLM[Modelos de Lenguaje LLMs]
+  VC -->|utiliza como instrucción el| PR[Prompt]
+  PR -->|guía la respuesta de| LLM
+  LLM -->|entrega el código para| VC
+  VC -->|tiene como meta crear un| PD[Prototipo Digital]
+  VC -->|requiere siempre| VH[Validación Humana]
+  VH -->|desencadena ciclos de| IT[Iteración]
+  IT -->|refina a través de un nuevo| PR
+  VC -->|aprovecha los| AL[Alcances de la IA]
+  VC -->|debe mitigar los| LM[Límites o Riesgos de la IA]
+
+  style VC fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#fff
+  style IA fill:#3b82f6,stroke:#2563eb,stroke-width:1px,color:#fff
+  style IAG fill:#10b981,stroke:#059669,stroke-width:1px,color:#fff
+  style LLM fill:#0ea5e9,stroke:#0284c7,stroke-width:1px,color:#fff
+  style PR fill:#f59e0b,stroke:#d97706,stroke-width:1px,color:#fff
+  style PD fill:#d946ef,stroke:#c084fc,stroke-width:1px,color:#fff
+  style VH fill:#14b8a6,stroke:#0d9488,stroke-width:1px,color:#fff
+  style IT fill:#ec4899,stroke:#db2777,stroke-width:1px,color:#fff
+  style AL fill:#06b6d4,stroke:#0891b2,stroke-width:1px,color:#fff
+  style LM fill:#f43f5e,stroke:#e11d48,stroke-width:1px,color:#fff`;
+        }
+
+        // --- UTILIDAD DE COPIADO ---
+        function copyTextById(elementId) {
+            const element = document.getElementById(elementId);
+            const textToCopy = element.innerText || element.textContent;
+
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                // Alerta temporal sin usar alert() tradicional
+                showToast("¡Texto copiado al portapapeles exitosamente!");
+            } catch (err) {
+                console.error('Fallo al copiar texto', err);
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-4 right-4 bg-violet-600 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-xl z-50 animate-bounce";
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // --- INTEGRACIÓN DE INTELIGENCIA ARTIFICIAL (GEMINI API) ---
+
+        // 1. Optimizar un prompt de entrada
+        async function optimizePrompt() {
+            const input = document.getElementById('prompt-idea-input');
+            const idea = input.value.trim();
+            if (!idea) return;
+
+            const btn = document.getElementById('btn-optimize');
+            const btnText = document.getElementById('btn-optimize-text');
+            const resultBox = document.getElementById('optimized-prompt-box');
+            const resultContent = document.getElementById('optimized-prompt-content');
+            const errorAlert = document.getElementById('api-error-alert');
+
+            btn.disabled = true;
+            btnText.innerText = "Optimizando con Gemini...";
+            errorAlert.classList.add('hidden');
+
+            const systemInstruction = "Eres un Ingeniero de Prompts experto en metodologías de desarrollo ágil y Vibe Coding.";
+            const query = `
+                El usuario quiere prototipar la siguiente idea: "${idea}".
+                Genera un prompt completamente optimizado y profesional listo para ser enviado a un modelo de lenguaje para Vibe Coding.
+                Incluye de manera limpia y clara en español:
+                1. ROL del modelo.
+                2. CONTEXTO de la aplicación.
+                3. RESTRICCIONES técnicas (prototipos auto-contenidos, un solo archivo interactivo, sin dependencias externas complejas).
+                4. INSTRUCCIONES de desarrollo paso a paso.
+                5. Guía de VALIDACIÓN HUMANA (aspectos lógicos, funcionales o de seguridad que el programador humano debe revisar críticamente).
+            `;
+
+            try {
+                const responseText = await queryGemini(query, systemInstruction);
+                resultContent.textContent = responseText;
+                resultBox.classList.remove('hidden');
+            } catch (err) {
+                document.getElementById('api-error-text').innerText = err.message;
+                errorAlert.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btnText.innerText = "Generar Prompt ✨";
+            }
+        }
+
+        // 2. Generar Desafío de depuración según el concepto activo
+        async function generateChallenge() {
+            const concept = CONCEPTS[selectedId];
+            const btn = document.getElementById('btn-challenge');
+            const challengeBox = document.getElementById('challenge-box');
+            const challengeContent = document.getElementById('challenge-content');
+            const errorAlert = document.getElementById('api-error-alert');
+            const evalBox = document.getElementById('evaluation-box');
+
+            btn.disabled = true;
+            btn.innerText = "Generando desafío...";
+            errorAlert.classList.add('hidden');
+            evalBox.classList.add('hidden');
+
+            const systemInstruction = "Eres un mentor académico experto en computación interactiva, algoritmos y depuración pragmática.";
+            const query = `
+                Basado en el concepto "${concept.title}" de tu mapa conceptual, genera un desafío de depuración práctico para un estudiante que practica Vibe Coding.
+                Proporciona:
+                1. Un código corto en JavaScript o HTML (máximo 15 líneas) que contenga un error de lógica sutil (que simule una "alucinación" o fallo del modelo de lenguaje).
+                2. Una explicación breve de lo que se supone que debe hacer el código y cuál es el fallo observado.
+                3. El objetivo del estudiante: proponer el prompt correctivo que guíe a la IA a solucionar el problema.
+                Responde con markdown claro en español.
+            `;
+
+            try {
+                challengeCode = await queryGemini(query, systemInstruction);
+                challengeContent.textContent = challengeCode;
+                challengeBox.classList.remove('hidden');
+            } catch (err) {
+                document.getElementById('api-error-text').innerText = err.message;
+                errorAlert.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Generar Desafío ✨";
+            }
+        }
+
+        // 3. Evaluar el prompt de corrección sugerido por el usuario
+        async function evaluatePrompt() {
+            const input = document.getElementById('correction-prompt-input');
+            const userPrompt = input.value.trim();
+            if (!userPrompt || !challengeCode) return;
+
+            const btn = document.getElementById('btn-evaluate');
+            const evalBox = document.getElementById('evaluation-box');
+            const evalContent = document.getElementById('evaluation-content');
+            const errorAlert = document.getElementById('api-error-alert');
+
+            btn.disabled = true;
+            errorAlert.classList.add('hidden');
+
+            const systemInstruction = "Eres un validador de ingeniería de software que evalúa la calidad de instrucciones de prompts para IA.";
+            const query = `
+                El estudiante se enfrenta al siguiente desafío de depuración:
+                ---
+                ${challengeCode}
+                ---
+                Para resolver el error del código, el estudiante ha redactado el siguiente prompt correctivo para la IA:
+                "${userPrompt}"
+
+                Por favor, evalúa si este prompt es claro, preciso y si proporciona el contexto necesario para que un LLM resuelva el error de manera efectiva.
+                Indica:
+                - Calificación de precisión del prompt de corrección (de 1 a 10).
+                - Qué entendió bien la IA de su prompt.
+                - Qué podría faltarle (por ejemplo, si no especificó el manejo de errores o condiciones límite).
+                - Una propuesta de refinamiento.
+
+                Responde en español de forma pedagógica y comprensiva.
+            `;
+
+            try {
+                const evalResponse = await queryGemini(query, systemInstruction);
+                evalContent.textContent = evalResponse;
+                evalBox.classList.remove('hidden');
+            } catch (err) {
+                document.getElementById('api-error-text').innerText = err.message;
+                errorAlert.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
